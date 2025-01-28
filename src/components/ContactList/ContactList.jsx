@@ -1,15 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ContactRow from "../ContactRow/ContactRow";
+import axios from "axios";
 
-const dummyContacts = [
-  { id: 1, name: "R2-D2", phone: "222-222-2222", email: "r2d2@droids.com" },
-  { id: 2, name: "C-3PO", phone: "333-333-3333", email: "c3po@droids.com" },
-  { id: 3, name: "BB-8", phone: "888-888-8888", email: "bb8@droids.com" },
-];
-
-function ContactList() {
-  const [contacts, setContacts] = useState(dummyContacts);
-  console.log(contacts);
+function ContactList({ setFeaturedUser }) {
+  console.log(setFeaturedUser);
+  const [contacts, setContacts] = useState([]);
+  useEffect(() => {
+    axios("https://fsa-jsonplaceholder-69b5c48f1259.herokuapp.com/users")
+      .then((data) => {
+        {
+          console.log(data.data);
+          setContacts(data.data);
+        }
+      })
+      .catch((err) => console.err(err));
+  }, []);
   return (
     <table>
       <thead>
@@ -24,7 +29,11 @@ function ContactList() {
       </thead>
       <tbody>
         {contacts.map((contact) => (
-          <ContactRow key={contact.id} contact={contact} />
+          <ContactRow
+            key={contact.id}
+            contact={contact}
+            setFeaturedUser={setFeaturedUser}
+          />
         ))}
       </tbody>
     </table>
@@ -32,3 +41,20 @@ function ContactList() {
 }
 
 export default ContactList;
+
+/**
+ * 1. Get the selected users id
+ * - get id by clicking the user
+ * - store the id somewhere(state variable?)
+ * - we will conditionally render the user
+ * -- if the featUserId is a non-sero number, it is truth, use that to show the single user details
+ * -- else, should be set to null to show list
+ * 2 show the user that was selected (list of users should be hidden)
+ * - we will use that id to fetch the details for the user
+ * - to fecth individual user, we will use the same approach as the list but with a different endpoint
+ * 3 click a back button to show list of users again (selected user should be hidden or set to null)
+ * - when we click this button from the single users detail page, we should set featUserId to null
+ *
+ *
+ *
+ */
