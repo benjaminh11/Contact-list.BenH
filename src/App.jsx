@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import ContactList from "./components/ContactList/ContactList";
 
 function App() {
-  return <>Contact List</>;
+  return (
+    <>
+      <ContactList />
+    </>
+  );
 }
 
 export default App;
